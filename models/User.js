@@ -2,10 +2,11 @@
 
 const mongoose = require('mongoose');
 
+// pour s'assurer que l'on est une adresse mail différente par compte
 const uniqueValidator = require('mongoose-unique-validator')
 
 const userSchema = mongoose.Schema({
-    email: { type: String, required: true, unique: true }, //unique pour que une adresse mail ne soit utiliser qu'une seule fois
+    email: { type: String, required: true, unique: true }, 
     password: { type: String, required: true }
 })
 

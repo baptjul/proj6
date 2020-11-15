@@ -10,11 +10,11 @@ const SalsaSchema = mongoose.Schema({
   mainPepper: { type: String, required: true },
   imageUrl: { type: String, required: true },
   heat: { type: Number, required: true },
-  likes: { type: Number, required: true },
-  dislikes: { type: Number, required: true },
-  usersLiked: { type: [String], required: true },
-  usersDisliked: { type: [String], required: true },
+  likes: { type: Number },
+  dislikes: { type: Number },
+  usersLiked: [{ type: String }],
+  usersDisliked: [{ type: String }],
 });
 
 // exportation du modèle
-module.exports = mongoose.model('Salsa', SalsaSchema);
+module.exports = mongoose.model('Sauce', SalsaSchema);

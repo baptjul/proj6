@@ -17,7 +17,7 @@ exports.signup = (req, res, next) => {
       })
       // puis on enregistrer la fiche
       user.save()
-        .then(() => res.status(201).json({ message: "utilisateur créé !" }))
+        .then(() => res.status(201).json({ message: "user created !" }))
         .catch(error => res.status(400).json({ error }))
 
     })
@@ -30,14 +30,14 @@ exports.login = (req, res, next) => {
     .then(user => {
       // si l'utilsateur n'existe pas
       if (!user) {
-        return res.status(401).json({ error: 'Utilisateur non trouvé !' });
+        return res.status(401).json({ error: 'User not found !' });
       }
       // comparation du hash envoyé et celui stocké
       bcrypt.compare(req.body.password, user.password)
         // recois un booleen
         .then(valid => {
           if (!valid) {
-            return res.status(401).json({ error: 'Mot de passe incorrect !' });
+            return res.status(401).json({ error: 'Incorrect password !' });
           }
           // on renvoie un objet
           res.status(200).json({
@@ -49,7 +49,7 @@ exports.login = (req, res, next) => {
               //clé pour encodage
               'RANDOM_TOKEN_SECRET',
               // temps jusqu'a expiration du token 
-              { expiresIn: '24h' }
+              { expiresIn: '48h' }
             )
           });
         })

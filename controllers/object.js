@@ -17,7 +17,7 @@ exports.createSauce = (req, res, next) => {
     imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
   });
   sauce.save()
-    .then(() => res.status(201).json({ message: 'Objet enregistré !' }))
+    .then(() => res.status(201).json({ message: 'Object saved !' }))
     .catch(error => res.status(400).json({ error: error }));
 };
 
@@ -30,10 +30,10 @@ exports.modifySauce = (req, res, next) => {
       ...JSON.parse(req.body.sauce),
       // génération d'une nouvelle image
       imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-      // si il existe pas de copie de req.body
+      // si il existe pas de copie req.body
     } : { ...req.body };
   Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
-    .then(() => res.status(200).json({ message: 'Objet modifié !' }))
+    .then(() => res.status(200).json({ message: 'Object modified !' }))
     .catch(error => res.status(400).json({ error }));
 };
 
@@ -44,11 +44,11 @@ exports.deleteSauce = (req, res, next) => {
     .then(sauce => {
       // split va récupérer ce qu'il a avant et après /images/ et ce qu'il y a après contient le nom
       const filename = sauce.imageUrl.split('/images/')[1];
-      // filesystem.unlink va supprimer (nome de l'image et le callback)
+      // filesystem.unlink va supprimer l'image (nome de l'image et le callback)
       fs.unlink(`images/${filename}`, () => {
         // suppression de l'objet dans la base de donnés
         Sauce.deleteOne({ _id: req.params.id })
-          .then(() => res.status(200).json({ message: 'Objet supprimé !' }))
+          .then(() => res.status(200).json({ message: 'Object deleted !' }))
           .catch(error => res.status(400).json({ error }));
       });
     })
@@ -69,3 +69,4 @@ exports.getAllSauces = (req, res, next) => {
     .then(sauces => res.status(200).json(sauces))
     .catch(error => res.status(400).json({ error }))
 };
+

@@ -32,6 +32,7 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 
+// url des images définit
 app.use('/images', express.static(path.join(__dirname, 'images')))
 
 // definition de l'url de l'api et des routes
