@@ -2,11 +2,11 @@ const express = require('express');
 const bodyParser = require('body-parser'); // transforme automatiquement la requete en json
 const mongoose = require('mongoose');
 const path = require('path');
-const session = require('express-session');
+//const session = require('express-session');
 const helmet = require("helmet");
 
 // import du router
-const salsaRoutes = require('./routes/object')
+const salsaRoutes = require('./routes/sauce')
 // import des login
 const userRoutes = require('./routes/user');
 
@@ -38,6 +38,7 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 // Sécurité contre les injections
 app.use(helmet());
+/*
 // gestion de la session utilisateu
 app.use(session({
   secret: process.env.SessionKey,
@@ -56,7 +57,7 @@ app.use(session({
     sameSite: 'strict'
   }
 }))
-
+*/
 // url des images définit
 app.use('/images', express.static(path.join(__dirname, 'images')))
 

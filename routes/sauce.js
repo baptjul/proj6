@@ -7,7 +7,7 @@ const auth = require('../middleware/auth');
 // multer pour l'importation d'image
 const multer = require('../middleware/multer-config');
 
-const sauceCtrl = require('../controllers/object')
+const sauceCtrl = require('../controllers/sauce')
 
 // Get de toutes les donnes sur le serveur
 router.get('/', auth, sauceCtrl.getAllSauces);
