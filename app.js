@@ -2,7 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser'); // transforme automatiquement la requete en json
 const mongoose = require('mongoose');
 const path = require('path');
-//const session = require('express-session');
+const session = require('express-session');
+const rateLimit = require('express-rate-limit');
 const helmet = require("helmet");
 
 // import du router
@@ -12,6 +13,7 @@ const userRoutes = require('./routes/user');
 
 require("dotenv").config();
 
+// Set up de la connexion au serveur
 mongoose.connect(process.env.DB_CONNECTION,
   {
     useNewUrlParser: true,
@@ -19,6 +21,13 @@ mongoose.connect(process.env.DB_CONNECTION,
   })
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
+
+// Définition d'un limite de connexion ou de compte crée
+const connexionLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 8, // limite chaque IP à 8 requêtes
+  message: "too many tries: try again later !"
+})
 
 const app = express();
 
@@ -33,12 +42,11 @@ app.use((req, res, next) => {
   next();
 });
 
-
-
 app.use(bodyParser.json());
+
 // Sécurité contre les injections
 app.use(helmet());
-/*
+
 // gestion de la session utilisateu
 app.use(session({
   secret: process.env.SessionKey,
@@ -50,20 +58,20 @@ app.use(session({
   cookie: {
     // acces au cookie seulement via requette HTTP
     httpOnly: true,
-    secure: false,
+    secure: true,
     //expire après 24h
     maxAge: 86400000,
     // requette doit provenir du même domaine
     sameSite: 'strict'
   }
 }))
-*/
+
 // url des images définit
 app.use('/images', express.static(path.join(__dirname, 'images')))
 
 // definition de l'url de l'api et des routes
 app.use('/api/sauces', salsaRoutes)
 // pour les login et mdp
-app.use('/api/auth', userRoutes)
+app.use('/api/auth', connexionLimiter, userRoutes)
 
 module.exports = app;

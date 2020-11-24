@@ -6,6 +6,8 @@ const passwordValidator = require('password-validator')
 
 const User = require('../models/User');
 
+require('dotenv').config();
+
 // création d'un shcéma de mot de passe
 var schema = new passwordValidator();
 
@@ -65,7 +67,7 @@ exports.login = (req, res, next) => {
               // les données a encodé : le payload
               { userId: user._id },
               //clé pour encodage
-              '2Fu4fB47JVfWY4d3LcUDDmH5ytht2e2kHJAHb7vAvbA3CwJ6mDLHHRUkz9gwEBGTg4WaXeSWcxgtr8aS',
+              process.env.TOKEN,
               // temps jusqu'a expiration du token 
               { expiresIn: '48h' }
             )
