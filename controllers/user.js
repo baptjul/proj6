@@ -2,26 +2,44 @@
 
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const passwordValidator = require('password-validator')
 
 const User = require('../models/User');
 
-exports.signup = (req, res, next) => {
-  // hash pour encrypter le mot de passe
-  bcrypt.hash(req.body.password, 10)
-    // on récupère le hash qu'on va enregistrer
-    .then(hash => {
-      // on va crée une fiche utilisateur avec le modèle
-      const user = new User({
-        email: req.body.email,
-        password: hash
-      })
-      // puis on enregistrer la fiche
-      user.save()
-        .then(() => res.status(201).json({ message: "user created !" }))
-        .catch(error => res.status(400).json({ error }))
+// création d'un shcéma de mot de passe
+var schema = new passwordValidator();
 
-    })
-    .catch(error => res.status(500).json({ error }))
+schema
+  // 7 caractères min
+  .is().min(7)
+  // 20 caractères max
+  .is().max(20)
+  // Aucun symbols
+  .has().not().symbols()
+  // Aucun espaces
+  .has().not().spaces();
+
+exports.signup = (req, res, next) => {
+  if (!schema.validate(req.body.password)) {
+    throw { error: "Mot de passe invalide !" }
+  } else {
+    // hash pour encrypter le mot de passe
+    bcrypt.hash(req.body.password, 10)
+      // on récupère le hash qu'on va enregistrer
+      .then(hash => {
+        // on va crée une fiche utilisateur avec le modèle
+        const user = new User({
+          email: req.body.email,
+          password: hash
+        })
+        // puis on enregistrer la fiche
+        user.save()
+          .then(() => res.status(201).json({ message: "user created !" }))
+          .catch(error => res.status(400).json({ error }))
+
+      })
+      .catch(error => res.status(500).json({ error }))
+  }
 };
 
 exports.login = (req, res, next) => {
@@ -47,7 +65,7 @@ exports.login = (req, res, next) => {
               // les données a encodé : le payload
               { userId: user._id },
               //clé pour encodage
-              'RANDOM_TOKEN_SECRET',
+              '2Fu4fB47JVfWY4d3LcUDDmH5ytht2e2kHJAHb7vAvbA3CwJ6mDLHHRUkz9gwEBGTg4WaXeSWcxgtr8aS',
               // temps jusqu'a expiration du token 
               { expiresIn: '48h' }
             )

@@ -2,14 +2,17 @@ const express = require('express');
 const bodyParser = require('body-parser'); // transforme automatiquement la requete en json
 const mongoose = require('mongoose');
 const path = require('path');
+const session = require('express-session');
+const helmet = require("helmet");
 
 // import du router
 const salsaRoutes = require('./routes/object')
 // import des login
-const userRoutes = require('./routes/user')
+const userRoutes = require('./routes/user');
 
-// connexion au serveur mongoose
-mongoose.connect('mongodb+srv://admin:zYCFn81f85XWAgXD@sopekocko.uoauq.mongodb.net/Piquante?retryWrites=true&w=majority',
+require("dotenv").config();
+
+mongoose.connect(process.env.DB_CONNECTION,
   {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -30,7 +33,29 @@ app.use((req, res, next) => {
   next();
 });
 
+
+
 app.use(bodyParser.json());
+// Sécurité contre les injections
+app.use(helmet());
+// gestion de la session utilisateu
+app.use(session({
+  secret: process.env.SessionKey,
+  name: 'sessionId',
+  // permet d'éviter des enregistrements de session si aucune modification n'est apporté
+  resave: false,
+  // permet d'éviter les enregistrements de session sans aucune information
+  saveUninitialized: false,
+  cookie: {
+    // acces au cookie seulement via requette HTTP
+    httpOnly: true,
+    secure: false,
+    //expire après 24h
+    maxAge: 86400000,
+    // requette doit provenir du même domaine
+    sameSite: 'strict'
+  }
+}))
 
 // url des images définit
 app.use('/images', express.static(path.join(__dirname, 'images')))

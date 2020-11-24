@@ -13,8 +13,8 @@ const sauceCtrl = require('../controllers/object')
 router.get('/', auth, sauceCtrl.getAllSauces);
 // requete POST
 router.post('/', auth, multer, sauceCtrl.createSauce);
-/*// requete POST likes
-router.post('/:id/like', auth, sauceCtrl.likeAndDislike);*/
+// requete POST likes
+router.post('/:id/like', auth, sauceCtrl.likeAndDislike);
 // segment dynamique pour un seul objet grace a son id
 router.get('/:id', auth, sauceCtrl.getOneSauce);
 // pour mettre a jour un objet existant
