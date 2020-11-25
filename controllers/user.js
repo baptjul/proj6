@@ -8,8 +8,6 @@ const User = require('../models/User');
 
 require('dotenv').config();
 
-/*
-*/
 exports.signup = (req, res, next) => {
   if (!passwordScheme.validate(req.body.password)) {
     throw { error: "invalid password" }
