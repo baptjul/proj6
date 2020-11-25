@@ -2,28 +2,17 @@
 
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const passwordValidator = require('password-validator')
+const passwordScheme = require('../models/Passwords');
 
 const User = require('../models/User');
 
 require('dotenv').config();
 
-// création d'un shcéma de mot de passe
-var schema = new passwordValidator();
-
-schema
-  // 7 caractères min
-  .is().min(7)
-  // 20 caractères max
-  .is().max(20)
-  // Aucun symbols
-  .has().not().symbols()
-  // Aucun espaces
-  .has().not().spaces();
-
+/*
+*/
 exports.signup = (req, res, next) => {
-  if (!schema.validate(req.body.password)) {
-    throw { error: "Mot de passe invalide !" }
+  if (!passwordScheme.validate(req.body.password)) {
+    throw { error: "invalid password" }
   } else {
     // hash pour encrypter le mot de passe
     bcrypt.hash(req.body.password, 10)

@@ -3,11 +3,10 @@ const bodyParser = require('body-parser'); // transforme automatiquement la requ
 const mongoose = require('mongoose');
 const path = require('path');
 const session = require('express-session');
-const rateLimit = require('express-rate-limit');
 const helmet = require("helmet");
 
 // import du router
-const salsaRoutes = require('./routes/sauce')
+const sauceRoutes = require('./routes/sauce')
 // import des login
 const userRoutes = require('./routes/user');
 
@@ -21,13 +20,6 @@ mongoose.connect(process.env.DB_CONNECTION,
   })
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
-
-// Définition d'un limite de connexion ou de compte crée
-const connexionLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 8, // limite chaque IP à 8 requêtes
-  message: "too many tries: try again later !"
-})
 
 const app = express();
 
@@ -70,8 +62,8 @@ app.use(session({
 app.use('/images', express.static(path.join(__dirname, 'images')))
 
 // definition de l'url de l'api et des routes
-app.use('/api/sauces', salsaRoutes)
+app.use('/api/sauces', sauceRoutes)
 // pour les login et mdp
-app.use('/api/auth', connexionLimiter, userRoutes)
+app.use('/api/auth', userRoutes)
 
 module.exports = app;
