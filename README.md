@@ -4,7 +4,7 @@
 
 Pour démarrer le serveur vous aurez besoin d'avoir `express` installé. 
 
-Vous aurez aussi besoin de renommer le fichier `env_` en `.env` et de remplacer les valeurs des variables qu'il contient :
+Vous aurez aussi besoin de renommer le fichier `env_.txt` en `.env` et de remplacer les valeurs des variables qu'il contient :
 	- `DB_CONNECTION` contiendra l'adresse du serveur
 	- `SessionKey` contiendra la clé signature des cookies
 	- `TOKEN` contiendra la clé signature des tokens
