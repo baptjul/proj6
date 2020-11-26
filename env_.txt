@@ -1,0 +1,3 @@
+DB_CONNECTION=server_adresse
+SessionKey=security_key_session
+TOKEN=security_key_token
