@@ -1,4 +1,4 @@
-# SoPeckoko backend server #
+# SoPekocko backend server #
 
 ### Prérequis ###
 
